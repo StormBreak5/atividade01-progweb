@@ -1,0 +1,7 @@
+package br.ueg.atividadei.repository;
+
+import br.ueg.atividadei.model.Livro;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface LivroRepository extends JpaRepository<Livro, Long> {
+}
