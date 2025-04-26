@@ -11,33 +11,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class LivroService {
-    private final LivroRepository repository;
+public interface LivroService {
 
-    public LivroService(LivroRepository repository) {
-        this.repository = repository;
-    }
+    public Livro save(Livro livro);
 
-    public Livro save(Livro livro) {
-        return repository.save(livro);
-    }
+    public List<Livro> list();
 
-    public List<Livro> list() {
-        return repository.findAll();
-    }
+    public Optional<Livro> findById(Long id);
 
-    public Optional<Livro> findById(Long id) {
-        return repository.findById(id);
-    }
+    public ResponseEntity<Livro> update(Long id, Livro livroAtualizado);
 
-    public ResponseEntity<Livro> update(Long id, Livro livroAtualizado) {
-        return findById(id).map(livro -> {
-            livroAtualizado.setId(livro.getId());
-            return ResponseEntity.ok(save(livroAtualizado));
-        }).orElse(ResponseEntity.notFound().build());
-    }
-
-    public void delete(Long id) {
-        repository.deleteById(id);
-    }
+    public void delete(Long id);
 }
