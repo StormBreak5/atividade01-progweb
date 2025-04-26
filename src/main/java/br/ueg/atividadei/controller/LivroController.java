@@ -16,29 +16,30 @@ public class LivroController {
         this.service = livroService;
     }
 
+    //CREATE
     @PostMapping
     public ResponseEntity<Livro> create(@RequestBody Livro livro) {
         return ResponseEntity.ok(service.save(livro));
     }
 
+    //READ
     @GetMapping
     public ResponseEntity<List<Livro>> list() {
         return ResponseEntity.ok(service.list());
     }
 
+    //READ ESPECIFICO
     @GetMapping("/{id}")
     public ResponseEntity<Livro> findById(@PathVariable Long id) {
         return service.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
-
-    @PutMapping
+    //UPDATE
+    @PutMapping("/{id}")
     public ResponseEntity<Livro> update(@PathVariable Long id, @RequestBody Livro livroAtualizado) {
-        return service.findById(id).map(livro -> {
-            livroAtualizado.setId(livro.getId());
-            return ResponseEntity.ok(service.save(livroAtualizado));
-        }).orElse(ResponseEntity.notFound().build());
+        return service.update(id, livroAtualizado);
     }
 
+    //DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
