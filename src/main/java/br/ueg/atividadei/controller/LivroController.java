@@ -1,7 +1,9 @@
 package br.ueg.atividadei.controller;
 
+import br.ueg.atividadei.dto.LivroDataDTO;
 import br.ueg.atividadei.model.Livro;
 import br.ueg.atividadei.service.LivroService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,6 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/livros")
 public class LivroController {
+
     private final LivroService service;
 
     public LivroController(LivroService livroService) {
@@ -18,8 +21,19 @@ public class LivroController {
 
     //CREATE
     @PostMapping
-    public ResponseEntity<Livro> create(@RequestBody Livro livro) {
-        return ResponseEntity.ok(service.save(livro));
+    public ResponseEntity<Livro> create(@RequestBody LivroDataDTO livro) {
+        Livro novoLivro = livroDataDTOModel(livro);
+        return ResponseEntity.ok(service.save(novoLivro));
+    }
+
+    public static Livro livroDataDTOModel(LivroDataDTO livroDataDTO) {
+        Livro newLivro = Livro.builder()
+                .autor(livroDataDTO.getAutor())
+                .titulo(livroDataDTO.getTitulo())
+                .editora(livroDataDTO.getEditora())
+                .isbn(livroDataDTO.getIsbn())
+                .build();
+        return newLivro;
     }
 
     //READ

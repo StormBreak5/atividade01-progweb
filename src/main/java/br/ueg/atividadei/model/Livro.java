@@ -1,10 +1,16 @@
 package br.ueg.atividadei.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Data
 public class Livro {

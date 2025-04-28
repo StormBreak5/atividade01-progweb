@@ -21,5 +21,5 @@ public interface LivroService {
 
     public ResponseEntity<Livro> update(Long id, Livro livroAtualizado);
 
-    public void delete(Long id);
+    public Livro delete(Long id);
 }

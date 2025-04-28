@@ -6,6 +6,7 @@ import br.ueg.atividadei.service.LivroService;
 import br.ueg.atividadei.service.exceptions.BusinessException;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +44,7 @@ public class LivroServiceImpl implements LivroService {
 
     @Override
     public ResponseEntity<Livro> update(Long id, Livro livroAtualizado) {
+        updateValidation(livroAtualizado);
         return findById(id).map(livro -> {
             livroAtualizado.setId(livro.getId());
             return ResponseEntity.ok(save(livroAtualizado));
@@ -50,8 +52,16 @@ public class LivroServiceImpl implements LivroService {
     }
 
     @Override
-    public void delete(Long id) {
-        repository.deleteById(id);
+    public Livro delete(Long id) {
+        Livro livro = repository.findById(id).get();
+
+        try {
+            repository.delete(livro);
+        } catch (DataIntegrityViolationException e) {
+            throw new BusinessException("O livro " + livro.getTitulo() + " não pôde ser removido por questões de integridade.");
+        }
+
+        return livro;
     }
 
     private void createValidation(Livro livro) {
@@ -68,5 +78,9 @@ public class LivroServiceImpl implements LivroService {
         } else if (livro.getDataPublicacao().isAfter(LocalDate.now())) {
             throw new BusinessException("A data de publicação não pode ser no futuro");
         }
+    }
+
+    private void updateValidation(Livro livro) {
+        createValidation(livro);
     }
 }
